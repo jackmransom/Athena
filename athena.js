@@ -7,9 +7,9 @@ app.get('/', function(req, res) {
   res.send('Hello, World!')
 })
 
-app.get('/update' function(req, res) {
+app.get('/update', function(req, res) {
 })
 
 app.listen(port, function() {
-  console.log('We\'re live on port ' + port + '\n') 
+  console.log('We\'re live on port ' + port) 
 })
