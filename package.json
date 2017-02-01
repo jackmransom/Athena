@@ -1,0 +1,19 @@
+{
+  "name": "athena",
+  "version": "0.0.1",
+  "description": "A simple blogging engine",
+  "main": "athena.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackmransom/Athena.git"
+  },
+  "author": "Jack Ransom",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jackmransom/Athena/issues"
+  },
+  "homepage": "https://github.com/jackmransom/Athena#readme"
+}
