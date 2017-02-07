@@ -1,4 +1,3 @@
-//TODO: Create templates
 //TODO: Create stylesheet
 const express = require('express');
 const marked = require('marked');
@@ -29,7 +28,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/update', function(req, res) {
-
+  //TODO: Remove this?
 })
 
 app.listen(port, function() {
