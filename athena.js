@@ -21,8 +21,11 @@ app.get('/', function(req, res) {
   //TODO: Generate listing of last (x) posts
   let articles = getListOfArticles(current_year);
 
-  let foo = fs.readFileSync('posts/about.md', encoding='utf8');
-  res.send(marked(foo));
+  //TODO: Decide on templating engine
+  let header = fs.readFileSync('templates/header.html', encoding='utf8');
+  let foo = fs.readFileSync('posts/about.md', encoding='utf8'); //TODO: Async
+  let footer = fs.readFileSync('templates/footer.html', encoding='utf8');
+  res.send(header+marked(foo)+footer);
 })
 
 app.get('/update', function(req, res) {
