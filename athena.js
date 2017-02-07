@@ -6,6 +6,8 @@ const fs = require('fs');
 
 let port = 8080; //TODO: Specify port in config file
 
+app.use(express.static('public'));
+
 function getListOfArticles(year) {
   let filePath = 'posts/' + year;
   //TODO: Use async functions
@@ -31,6 +33,8 @@ app.get('/update', function(req, res) {
   //TODO: Remove this?
 })
 
+
 app.listen(port, function() {
   console.log('We\'re live on port ' + port);
 })
+
