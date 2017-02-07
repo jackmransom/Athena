@@ -4,7 +4,7 @@ const marked = require('marked');
 const app = express();
 const fs = require('fs');
 
-let port = 8080; //TODO: Specify port in config file
+let port = process.env.PORT || 8080; //TODO: Specify port in config file
 
 app.use(express.static('public'));
 
@@ -20,7 +20,7 @@ app.get('/', function(req, res) {
   let current_year = current_date.getFullYear();
 
   //TODO: Generate listing of last (x) posts
-  let articles = getListOfArticles(current_year);
+  //let articles = getListOfArticles(current_year);
 
   //TODO: Decide on templating engine
   let header = fs.readFileSync('templates/header.html', encoding='utf8');
