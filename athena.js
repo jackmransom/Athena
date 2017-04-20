@@ -27,21 +27,18 @@ app.get('/', function(req, res) {
   let current_month = current_date.getMonth();
 
   //TODO: Generate listing of last (x) posts, grab the title and first paragraph for each
-  var previews = []
-  getListOfArticles(current_year).forEach(function(article) {
-    previews.push(getFirstParagraph(current_year, article));
-    
-  });
-
   //TODO: Decide on templating engine
   let header = fs.readFileSync('templates/header.html', encoding='utf8');
   var body = "";
-  previews.forEach(function(text){
-    body = body.concat(marked(text));
+
+  getListOfArticles(current_year).forEach(function(article) {
+    let preview = getFirstParagraph(current_year, article);
+    body = body.concat(marked(preview));
+    
   });
+  
   let footer = fs.readFileSync('templates/footer.html', encoding='utf8');
   res.send(header+body+footer);
-  //res.send(previews);
 })
 
 app.get('/update', function(req, res) {
