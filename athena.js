@@ -1,8 +1,8 @@
 //TODO: Create stylesheet
 const express = require('express');
 const marked = require('marked');
-const app = express();
 const fs = require('fs');
+const app = express();
 
 let port = process.env.PORT || 8080; //TODO: Specify port in config file
 
@@ -15,18 +15,33 @@ function getListOfArticles(year) {
   return articles;
 }
 
+function getFirstParagraph(year, article) {
+  let path = 'posts/' + year + '/' + article
+  let file = fs.readFileSync(path, encoding='utf8');
+  return file;
+}
+
 app.get('/', function(req, res) {
   let current_date = new Date();
   let current_year = current_date.getFullYear();
+  let current_month = current_date.getMonth();
 
-  //TODO: Generate listing of last (x) posts
-  //let articles = getListOfArticles(current_year);
+  //TODO: Generate listing of last (x) posts, grab the title and first paragraph for each
+  var previews = []
+  getListOfArticles(current_year).forEach(function(article) {
+    previews.push(getFirstParagraph(current_year, article));
+    
+  });
 
   //TODO: Decide on templating engine
   let header = fs.readFileSync('templates/header.html', encoding='utf8');
-  let foo = fs.readFileSync('posts/about.md', encoding='utf8'); //TODO: Async
+  var body = "";
+  previews.forEach(function(text){
+    body = body.concat(marked(text));
+  });
   let footer = fs.readFileSync('templates/footer.html', encoding='utf8');
-  res.send(header+marked(foo)+footer);
+  res.send(header+body+footer);
+  //res.send(previews);
 })
 
 app.get('/update', function(req, res) {
