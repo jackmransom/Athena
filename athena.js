@@ -46,6 +46,12 @@ app.get('/about', function(req, res) {
   res.send(marked(file))
 })
 
+app.get('/:year/:postName', function(req, res) {
+  let path = 'posts/' + req.params['year'] + '/' + req.params['postName'] + '.md'
+  let post = fs.readFileSync(path, encoding='utf8')
+  res.send(marked(post))
+})
+
 app.listen(port, function() {
   console.log('We\'re live on port ' + port);
 })
