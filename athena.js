@@ -4,13 +4,21 @@ const express = require('express');
 const marked = require('marked');
 const fs = require('fs');
 const app = express();
+const hljs = require('highlight.js')
 
 const port = process.env.PORT || 8080; //TODO: Specify port in config file?
+const postsDir = 'posts/'
+
+marked.setOptions({
+  highlight: function(code, lang) {
+    return hljs.highlight(lang, code).value
+  }
+})
 
 app.use(express.static('public'));
 
 function getListOfArticles(year) {
-  let filePath = 'posts/' + year;
+  let filePath = postsDir + year;
   //TODO: Use async functions
   let articles = fs.readdirSync(filePath);
   return articles;
@@ -18,9 +26,9 @@ function getListOfArticles(year) {
 
 function getFirstParagraph(year, article) {
   //TODO: Get rid of this and just leave the full article on the page?
-  let path = 'posts/' + year + '/' + article
+  let path = postsDir + year + '/' + article
   let file = fs.readFileSync(path, encoding='utf8');
-  return file;
+  return file
 }
 
 app.get('/', function(req, res) {
@@ -41,13 +49,13 @@ app.get('/', function(req, res) {
 })
 
 app.get('/about', function(req, res) {
-  let path = 'posts/about.md'
+  let path = postsDir + 'about.md'
   let file = fs.readFileSync(path, encoding='utf8')
   res.send(marked(file))
 })
 
 app.get('/:year/:postName', function(req, res) {
-  let path = 'posts/' + req.params['year'] + '/' + req.params['postName'] + '.md'
+  let path = postsDir + req.params['year'] + '/' + req.params['postName'] + '.md'
   let post = fs.readFileSync(path, encoding='utf8')
   res.send(marked(post))
 })
