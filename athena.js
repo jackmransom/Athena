@@ -3,13 +3,17 @@ const express = require('express');
 const marked = require('marked');
 const fs = require('fs');
 const app = express();
-const hljs = require('highlight.js')
-const handlebars = require('handlebars')
+const hljs = require('highlight.js');
+const handlebars = require('handlebars') //TODO: Default tags
 
 const port = process.env.PORT || 8080; //TODO: Specify port in config file?
-const postsDir = 'posts/'
-const header = fs.readFileSync('templates/header.html', encoding='utf8');
+const siteName = 'Fancy name tktk'
+const postsDir = 'posts/';
+const header = handlebars.compile(fs.readFileSync('templates/header.html', encoding='utf8'));
 const footer = fs.readFileSync('templates/footer.html', encoding='utf8');
+
+
+app.use(express.static('public'));
 
 marked.setOptions({
   highlight: function(code, lang) {
@@ -17,13 +21,12 @@ marked.setOptions({
   }
 })
 
-app.use(express.static('public'));
-
-
 app.get('/', function(req, res) {
   let current_date = new Date();
   let current_year = current_date.getFullYear();
   let current_month = current_date.getMonth();
+
+  var context = {title: 'Home', siteName: siteName, description: 'Welcome!'};
 
   var body = "";
   getListOfArticles(current_year).forEach(function(article) {
@@ -31,22 +34,23 @@ app.get('/', function(req, res) {
     body = body.concat(marked(preview) + '<hr>');
     
   });
-  res.send(header+body+footer);
+  res.send(header(context)+body+footer);
 })
 
 app.get('/about', function(req, res) {
-  let path = postsDir + 'about.md'
-  let file = fs.readFileSync(path, encoding='utf8')
-  res.send(header+marked(file)+footer)
+  let path = postsDir + 'about.md';
+  let file = fs.readFileSync(path, encoding='utf8');
+  var context = {title: 'Home', siteName: siteName, description: 'Welcome!'};
+  res.send(header(context)+marked(file)+footer);
 })
 
 app.get('/:year/:postName', function(req, res) {
-  let path = postsDir + req.params['year'] + '/' + req.params['postName'] + '.md'
-  let post = fs.readFileSync(path, encoding='utf8')
-  var template = handlebars.compile(header)
-  var context = {Foo: 'Foop', bar:'Baaaar'}
+  var name = req.params['postName'] + '.md'; //TODO: This is hacky
+  var post = getArticle(req.params['year'], name);
+  var context = {title: 'Wagwan', siteName: siteName,
+		 description:'This is a clear placeholder.'};
   
-  res.send(template(context)+marked(post)+footer)
+  res.send(header(context)+marked(post)+footer);
 })
 
 app.listen(port, function() {
@@ -61,7 +65,11 @@ function getListOfArticles(year) {
 }
 
 function getArticle(year, article) {
-  let path = postsDir + year + '/' + article
+  let path = postsDir + year + '/' + article;
   let file = fs.readFileSync(path, encoding='utf8');
-  return file
+  return file;
+}
+
+function getMetadata(markdown) {
+  //TODO: Grab metadata from markdown file, strip it, and return both
 }
